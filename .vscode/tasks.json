@@ -1,0 +1,99 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe 編譯當前檔案",
+			"command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"-c",
+				"${file}",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}${pathSeparator}bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "編譯器: C:\\msys64\\mingw64\\bin\\g++.exe"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe 編譯所有檔案",
+			"command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-c",
+				"-g",
+				"${workspaceFolder}${pathSeparator}View${pathSeparator}*.cpp",
+				"${workspaceFolder}${pathSeparator}Model${pathSeparator}*.cpp",
+				"${workspaceFolder}${pathSeparator}*.cpp"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}${pathSeparator}bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "編譯器: C:\\msys64\\mingw64\\bin\\g++.exe"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe 連結",
+			"command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"${workspaceFolder}${pathSeparator}bin${pathSeparator}*.o",
+				"-o",
+				"${workspaceFolder}${pathSeparator}sim.exe"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "編譯器: C:\\msys64\\mingw64\\bin\\g++.exe"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe 編譯連結",
+			"command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"${workspaceFolder}${pathSeparator}View${pathSeparator}*.cpp",
+				"${workspaceFolder}${pathSeparator}Model${pathSeparator}*.cpp",
+				"${workspaceFolder}${pathSeparator}*.cpp",
+				"-o",
+				"${workspaceFolder}${pathSeparator}sim.exe"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "編譯器: C:\\msys64\\mingw64\\bin\\g++.exe"
+		}
+	]
+}
