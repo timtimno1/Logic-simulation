@@ -1,7 +1,7 @@
 #include "Device.h"
 
-class gateOR:public Device
+class gateOR : public Device
 {
-    public:
-        virtual int getType() override;
+   public:
+    virtual int getType() override;
 };

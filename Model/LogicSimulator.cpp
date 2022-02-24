@@ -1,10 +1,11 @@
-#include <iostream>
-#include <string>
+#include "LogicSimulator.h"
+
 #include <fstream>
+#include <iostream>
 #include <sstream>
+#include <string>
 #include <vector>
 
-#include "LogicSimulator.h"
 #include "gateAND.h"
 #include "gateNOT.h"
 #include "gateOR.h"
@@ -17,9 +18,9 @@ bool LogicSimulator::load(std::string fileName)
 {
     using namespace std;
 
-    ifstream ifs(fileName, std::ios::in);                                   // read file
+    ifstream ifs(fileName, std::ios::in);  // read file
 
-    if (!ifs.is_open())                                                     // check file open
+    if (!ifs.is_open())  // check file open
         return false;
 
     stringstream ss;
@@ -27,34 +28,34 @@ bool LogicSimulator::load(std::string fileName)
 
     string word;
 
-    getline(ss, word, '\n');                                                //read input pins
+    getline(ss, word, '\n');  // read input pins
     iPins = new vector<Device *>;
     iPins->reserve(stoi(word));
-    cout << "Circuit: " << word << " input pins, 1 output pins and ";
+    cout << "Circuit: " << word << " input pins, ";
 
-    getline(ss, word, '\n');                                                //reas gates
+    getline(ss, word, '\n');  // read gates
     circuit = new vector<Device *>;
     circuit->reserve(stoi(word));
-    cout << word << " gates\n";
+    string gatsNumber = word;
 
-    vector<vector<int>> *conPin;                                            //This is to save temp gate pins
-    conPin=new vector<vector<int>>;
+    vector<vector<int>> *conPin;  // This is to save temp gate pins
+    conPin = new vector<vector<int>>;
     conPin->reserve(stoi(word));
-    for(int i=0;i<conPin->capacity();i++)
+    for (int i = 0; i < conPin->capacity(); i++)
     {
         vector<int> a;
         conPin->push_back(a);
     }
 
-    for (int i = 0; i < iPins->capacity(); i++)                             //create iPins
+    for (int i = 0; i < iPins->capacity(); i++)  // create iPins
     {
         Device *temp = new iPin();
         int ip = iPins->capacity();
-        temp->setId(i+1);
+        temp->setId(i + 1);
         iPins->push_back(temp);
     }
 
-    for (int i = 0; i < circuit->capacity(); i++)                           //create circuit
+    for (int i = 0; i < circuit->capacity(); i++)  // create circuit
     {
         getline(ss, word, '\n');
 
@@ -70,7 +71,7 @@ bool LogicSimulator::load(std::string fileName)
         if (gateType == AND)
         {
             Device *temp = new gateAND();
-            temp->setId(i+1);
+            temp->setId(i + 1);
             int pin = -1;
             while (pin != 0)
             {
@@ -83,21 +84,20 @@ bool LogicSimulator::load(std::string fileName)
         else if (gateType == OR)
         {
             Device *temp = new gateOR();
-            temp->setId(i+1);
+            temp->setId(i + 1);
             int pin = -1;
             while (pin != 0)
             {
                 pin = nextInt(word);
                 if (pin != 0)
                     conPin->at(i).push_back(pin);
-                    
             }
             circuit->push_back(temp);
         }
         else if (gateType == NOT)
         {
             Device *temp = new gateNOT();
-            temp->setId(i+1);
+            temp->setId(i + 1);
             int pin = -1;
             while (pin != 0)
             {
@@ -109,27 +109,40 @@ bool LogicSimulator::load(std::string fileName)
         }
     }
 
-    for (int i = 0; i < circuit->size(); i++)                               //set device input pin
+    for (int i = 0; i < circuit->size(); i++)  // set device input pin
     {
         for (int j = 0; j < conPin->at(i).size(); j++)
         {
-            int debug=conPin->at(i).at(j);
-            int cirsize=circuit->size();
-            int pinsize=conPin[i].size();
+            int debug = conPin->at(i).at(j);
+            int cirsize = circuit->size();
+            int pinsize = conPin[i].size();
             if (conPin->at(i).at(j) < 0)
-                circuit->at(i)->addInputPin(iPins->at(conPin->at(i).at(j)*-1-1));
+                circuit->at(i)->addInputPin(iPins->at(conPin->at(i).at(j) * -1 - 1));
             else
-                circuit->at(i)->addInputPin(circuit->at((conPin->at(i).at(j))-1));
+                circuit->at(i)->addInputPin(circuit->at((conPin->at(i).at(j)) - 1));
         }
     }
 
-    for(int i=0;i<circuit->size();i++)
+    for (int i = 0; i < circuit->size(); i++)
     {
         circuit->at(i)->checkIsConnected();
     }
-    ifs.close();                                                            // close file
 
-    Load=true;
+    oPins = new vector<Device *>;  // set  output pin
+    for (int i = 0; i < circuit->size(); i++)
+    {
+        if (!circuit->at(i)->getIsConnected())
+        {
+            Device *temp = new oPin();
+            temp->addInputPin(circuit->at(i));
+            oPins->push_back(temp);
+        }
+    }
+    cout << oPins->size() << " output pins and " << gatsNumber << " gates\n";
+
+    ifs.close();  // close file
+
+    Load = true;
     return true;
 }
 
@@ -137,51 +150,69 @@ std::string LogicSimulator::getSimulationResult(std::vector<__int8> inputValue)
 {
     using namespace std;
 
-    oPins=new vector<Device *>;                                             //set  output pin
-    for(int i=0;i<circuit->size();i++)
+    oPins = new vector<Device *>;  // set  output pin
+    for (int i = 0; i < circuit->size(); i++)
     {
-        if(!circuit->at(i)->getIsConnected())
+        if (!circuit->at(i)->getIsConnected())
         {
-            Device *temp=new oPin();
+            Device *temp = new oPin();
             temp->addInputPin(circuit->at(i));
             oPins->push_back(temp);
         }
     }
 
-    if(oPins->at(0)->processValue())                                        //clear the past state
+    if (oPins->at(0)->processValue())  // clear the past state
     {
-        for(int i=0;i<circuit->size();i++)
+        for (int i = 0; i < circuit->size(); i++)
         {
             circuit->at(i)->clearValue();
         }
-        oPins->at(0)->clearValue();
+        for (int i = 0; i < oPins->size(); i++)
+        {
+            oPins->at(i)->clearValue();
+        }
     }
-    
-    for(int i=0;i<iPins->size();i++)                                        //set input value
+
+    for (int i = 0; i < iPins->size(); i++)  // set input value
     {
-        iPin* temp=(iPin*)(iPins->at(i));
+        iPin *temp = (iPin *)(iPins->at(i));
         temp->setValue(inputValue[i]);
     }
 
-    int count=0;                                                            //process gates value
-    bool finalProcess[circuit->size()]={false}; 
-    while(oPins->at(0)->getValue()==-1)
+    int count = 0;  // process gates value
+    bool finalProcess[circuit->size()] = {false};
+    bool notBreak = true;
+    while (notBreak)
     {
-        if(!finalProcess[count])
-            finalProcess[count]=circuit->at(count)->processValue();
+        notBreak = false;
+        if (!finalProcess[count])
+            finalProcess[count] = circuit->at(count)->processValue();
+
         count++;
-        if(count >= circuit->size())
-            count=0;
-        oPins->at(0)->processValue();
+        if (count >= circuit->size())
+            count = 0;
+
+        for (int i = 0; i < oPins->size(); i++)
+        {
+            oPins->at(i)->processValue();
+            if (oPins->at(i)->getValue() == -1)
+            {
+                notBreak = true;
+                break;
+            }
+        }
     }
 
-    string outPut="";                                                       //create string
-    for(int i=0;i<inputValue.size();i++)
+    string outPut = "";  // create string
+    for (int i = 0; i < inputValue.size(); i++)
     {
-        outPut+=to_string(inputValue[i]) + " ";
+        outPut += to_string(inputValue[i]) + " ";
     }
-
-    outPut+="| " + to_string(oPins->at(0)->getValue());
+    outPut += "| ";
+    for (int i = 0; i < oPins->size(); i++)
+    {
+        outPut += to_string(oPins->at(i)->getValue()) + " ";
+    }
 
     return outPut + "\n";
 }
@@ -189,6 +220,11 @@ std::string LogicSimulator::getSimulationResult(std::vector<__int8> inputValue)
 int LogicSimulator::getiPinsSize()
 {
     return iPins->size();
+}
+
+int LogicSimulator::getoPinsSize()
+{
+    return oPins->size();
 }
 
 bool LogicSimulator::isLoad()

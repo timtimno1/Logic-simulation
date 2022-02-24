@@ -1,7 +1,6 @@
 class TextUI
 {
-    public:
-
-        void displayMenu();
-        void processCommand();
+   public:
+    void displayMenu();
+    void processCommand();
 };

@@ -1,6 +1,6 @@
 #include "gateNOT.h"
 
-int gateNOT::getType() 
+int gateNOT::getType()
 {
     return NOT;
 }

@@ -56,7 +56,7 @@
 				"-g",
 				"${workspaceFolder}${pathSeparator}bin${pathSeparator}*.o",
 				"-o",
-				"${workspaceFolder}${pathSeparator}sim.exe"
+				"${workspaceFolder}${pathSeparator}Logic-simulation.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
@@ -81,7 +81,7 @@
 				"${workspaceFolder}${pathSeparator}Model${pathSeparator}*.cpp",
 				"${workspaceFolder}${pathSeparator}*.cpp",
 				"-o",
-				"${workspaceFolder}${pathSeparator}sim.exe"
+				"${workspaceFolder}${pathSeparator}Logic-simulation.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
